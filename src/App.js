@@ -1,91 +1,74 @@
 import React, { Component } from 'react';
 import './App.css';
+import Score from './Components/Score';
+import Solution from './Components/Solution';
+import Letters from './Components/Letters'
+import EndGame from './Components/EndGame';
 
 class App extends Component {
-  getStuff() {
-    return(
-        "Companies"
-    );
-  }
 
-  getMorningGreeting() {
-    return(
-      "Good Morning"
-    )
-  }
-
-  getEveningGreeting() {
-    return(
-      "Good Evening"
-    )
-  }
-
-  showCompany(name, revenue) {
-    return (
-      <div class={name}>{name} makes {revenue} every year</div>
-    )
-  }
-
-  getClassName(temperature) {
-    
-    if(temperature < 15){
-      return ("freezing")
-    }else if(temperature > 15 && temperature < 30){
-      return ("fair")
-    }else{
-      return ("hell-scape")
+    constructor(){
+      super()
+      this.state ={
+        score:100,
+        solution:{
+          secret:"CALM",
+          hint:"Your ideal mood coding."
+        },
+        letterStatus : this.generateLetterStatuses()
+      }
     }
-    
-  }
+    generateLetterStatuses() {
+      let letterStatus = {}
+      for (let i = 65; i <= 90; i++) {
+        letterStatus[String.fromCharCode(i)] = false
+      }
+      return letterStatus
+    }
+    selectLetter = (letter) => {
+      let temp = {...this.state.letterStatus}
+      temp[letter] = true
+      this.setState({letterStatus : temp})
+      
+      let newScore = this.state.score
+      if (this.state.solution.secret.includes(letter)) {
+        newScore += 5
+      } else {
+        newScore -= 20
+      }
+      this.setState({score: newScore})
 
+    }
+    checkEndGame = () => {
+      if(this.state.score <= 0)
+        return 0
+      if(this.foundAllLetters())
+        return 1
+      return -1
+    }
+
+    foundAllLetters = ()=>{
+      let flag = true
+      Object.entries(this.state.solution.secret).forEach((key) => {
+        if(this.state.letterStatus[key[1]]===false) 
+          flag = false
+      })
+      return flag 
+    }
   render() {
-
-    let companies = [
-      { name: "Tesla", revenue: 140 },
-      { name: "Microsoft", revenue: 300 },
-      { name: "Google", revenue: 600 }
-    ]
-    let time = new Date().getHours();
-
+    let win = this.checkEndGame()
     return (
       <div>
-        <div className="ex-space">
-          <h4 className='ex-title'>Spot-check 1</h4 >
-          <div className="exercise" id="spotcheck-1">
-            <h1>Stuff method return: {this.getStuff()}</h1>
-          </div>
+        {(win >= 0) ? <EndGame win={win} solution={this.state.solution} /> 
+        : <div>
+          <Score score={this.state.score}/>
+          <Solution solution={this.state.solution} letters={this.state.letterStatus} />
+          <div>Available Letters</div>
+          <Letters selectLetter={this.selectLetter} letters={this.state.letterStatus} />
+        </div>
+        }
         </div>
 
-        <div className="ex-space">
-          <h4 className='ex-title'>Spot-check 2</h4>
-          <div className="exercise" id="spotcheck-2">
-            <h2>
-            {{time}>12 ? this.getMorningGreeting() : this.getEveningGreeting()}
-          </h2>
-          </div>
-        </div>
-
-        <div className="ex-space">
-          <h4 className='ex-title'>Spot-check 3</h4>
-          <div className="exercise" id="spotcheck-3">
-            {[<p>{this.getMorningGreeting()}</p>,<p>{this.getEveningGreeting()}</p>,<p>Some Text</p>]}
-          </div>
-        </div>
-
-        <div className="ex-space">
-          <h4 className='ex-title'>Exercise 1</h4>
-          <div className="exercise" id="ex-1">
-            {companies.map(c => this.showCompany(c.name,c.revenue))}
-          </div>
-        </div>
-
-        <div className="ex-space">
-          <h4 className='ex-title'>Exercise 2</h4>
-          <div className="exercise" id="ex-2">
-            {<div id='weatherBox' className={this.getClassName(10)}></div>}
-          </div>
-        </div>
-      </div>
     )
   }
 }

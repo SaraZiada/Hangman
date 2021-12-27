@@ -1,35 +1,19 @@
-body {
-    background-color: #E4E9EF;
+.SelectedLetter {
+    color: grey;
 }
 
-.ex-space {
-    margin: 4vh;
-    padding: 2vh;
-    min-height: 10vh;
-    box-shadow: 1px 1px 3px black;
+.NotSelectedLetter {
+    color: black;
 }
 
-.ex-title {
-    margin-top: 0;
-    font-size: 0.5em;
-    letter-spacing: 0.5px;
-    color: #FF6E9F;
-    text-transform: uppercase;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+.high-score {
+    color: green;
 }
 
-#weatherBox {
-    height: 300px;
+.medium-score {
+    color: yellowgreen;
 }
 
-.freezing {
-    background-color: aqua;
-}
-
-.fair {
-    background-color: orange;
-}
-
-.hell-scape {
-    background-color: red;
+.low-score {
+    color: red;
 }
